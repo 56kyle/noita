@@ -54,6 +54,9 @@ docs = [
     "sphinxcontrib-typer>=0.5.1",
 ]
 
+[project.scripts]
+noita = "noita.__main__:app"
+
 [project.urls]
 Homepage = "https://github.com/56kyle/noita"
 Repository = "https://github.com/56kyle/noita"

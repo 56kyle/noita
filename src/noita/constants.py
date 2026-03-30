@@ -21,7 +21,9 @@ USER_DATA_FOLDER: Path = user_data_path(appname=APP_NAME, appauthor=APP_AUTHOR, 
 USER_LOG_FOLDER: Path = user_log_path(appname=APP_NAME, appauthor=APP_AUTHOR, ensure_exists=True)
 
 USER_NOITA_QUICK_SAVES_FOLDER: Path = USER_DATA_FOLDER / "quick_saves"
+USER_NOITA_QUICK_SAVES_FOLDER.mkdir(parents=True, exist_ok=True)
 USER_NOITA_SAVES_FOLDER: Path = USER_DATA_FOLDER / "saves"
+USER_NOITA_SAVES_FOLDER.mkdir(parents=True, exist_ok=True)
 
 NOITA_DATA_FOLDER: Path = USER_CACHE_FOLDER.parent.parent.parent / "LocalLow" / "Nolla_Games_Noita"
 NOITA_DEFAULT_SAVE_NAME: str = "save00"

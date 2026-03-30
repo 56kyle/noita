@@ -8,7 +8,6 @@ from loguru import logger
 from pydantic import DirectoryPath
 from pydantic import NewPath
 from pydantic import validate_call
-from pygments.lexers import q
 
 from noita.constants import DEFAULT_PYDANTIC_CONFIG
 from noita.constants import FILE_SAFE_DATETIME_FORMAT
@@ -20,7 +19,7 @@ from noita.constants import USER_NOITA_SAVES_FOLDER
 
 def quick_save() -> None:
     """Create a new disposable Noita game save state."""
-    logger.info(f"Creating a new Noita quicksave...")
+    logger.info("Creating a new Noita quicksave...")
     path: Path = get_new_quick_save_path()
     quick_saves: list[Path] = get_quick_save_paths()
     if len(quick_saves) >= MAX_QUICK_SAVE_COUNT:
@@ -30,7 +29,7 @@ def quick_save() -> None:
 
 def get_new_quick_save_path() -> Path:
     """Returns a new Noita quicksave folder."""
-    quick_save_slug: str = datetime.datetime.now().strftime(FILE_SAFE_DATETIME_FORMAT)
+    quick_save_slug: str = datetime.datetime.now(tz=datetime.timezone.utc).strftime(FILE_SAFE_DATETIME_FORMAT)
     file_name: str = f"quicksave_{quick_save_slug}"
     path: Path = USER_NOITA_QUICK_SAVES_FOLDER / file_name
     return path
@@ -60,7 +59,7 @@ def save(path: NewPath) -> None:
 
 def quick_load() -> None:
     """Load the latest disposable Noita game save state."""
-    logger.info(f"Loading the latest Noita quicksave...")
+    logger.info("Loading the latest Noita quicksave...")
     path: Path = find_most_recent_save()
     load(path=path)
 
@@ -106,13 +105,13 @@ def clear(path: DirectoryPath) -> None:
 
 def show_saves() -> None:
     """Show available Noita save states."""
-    logger.info(f"Showing available Noita save states...")
+    logger.info("Showing available Noita save states...")
 
-    logger.info(f"Quicksaves:")
+    logger.info("Quicksaves:")
     quick_save_paths: list[Path] = get_quick_save_paths()
     display_saves(paths=quick_save_paths)
 
-    logger.info(f"Saves:")
+    logger.info("Saves:")
     save_paths: list[Path] = get_save_paths()
     display_saves(paths=save_paths)
 
@@ -120,6 +119,8 @@ def show_saves() -> None:
 def display_saves(paths: list[Path]) -> None:
     """Display the provided list of Noita save paths."""
     for save_path in sorted(paths, key=lambda path: path.stat().st_mtime):
-        last_access_datetime: datetime.datetime = datetime.datetime.fromtimestamp(save_path.stat().st_mtime)
+        last_access_datetime: datetime.datetime = datetime.datetime.fromtimestamp(
+            save_path.stat().st_mtime, tz=datetime.timezone.utc
+        )
         last_access_slug: str = last_access_datetime.strftime(FILE_SAFE_DATETIME_FORMAT)
         logger.info(f"\t{save_path} - {last_access_slug}")

@@ -1,20 +1,23 @@
 """Command-line interface."""
-from pathlib import Path
+
+from typing import TYPE_CHECKING
 from typing import Annotated
 from typing import Optional
 
 import typer
 
 from noita.constants import NOITA_CURRENT_SAVE_PATH
-from noita.constants import NOITA_DEFAULT_SAVE_NAME
 from noita.constants import USER_NOITA_SAVES_FOLDER
 from noita.game_state import clear
 from noita.game_state import find_most_recent_save
 from noita.game_state import get_new_quick_save_path
 from noita.game_state import load
-from noita.game_state import quick_save
 from noita.game_state import save
 from noita.game_state import show_saves
+
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 app: typer.Typer = typer.Typer()
@@ -27,11 +30,13 @@ def main() -> None:
 
 @app.command(name="save")
 def noita_save(
-    save_name: Annotated[Optional[str], typer.Argument(
-        show_default=True,
-        help="The name of the save to load, or nothing to load the latest quicksave."
-    )] = None,
-    force: Annotated[bool, typer.Option("--force", "-f", is_flag=True)] = False
+    save_name: Annotated[
+        Optional[str],
+        typer.Argument(
+            show_default=True, help="The name of the save to load, or nothing to load the latest quicksave."
+        ),
+    ] = None,
+    force: Annotated[bool, typer.Option("--force", "-f", is_flag=True)] = False,
 ) -> None:
     """Create a new Noita save state."""
     if save_name is None:
@@ -48,7 +53,7 @@ def noita_save(
 @app.command(name="load")
 def noita_load(
     save_name: Annotated[Optional[str], typer.Argument(show_default=True)] = None,
-    force: Annotated[bool, typer.Option(is_flag=True)] = False
+    force: Annotated[bool, typer.Option(is_flag=True)] = False,
 ) -> None:
     """Load an existing Noita save state."""
     if save_name is None:

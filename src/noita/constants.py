@@ -29,6 +29,8 @@ NOITA_DATA_FOLDER: Path = USER_CACHE_FOLDER.parent.parent.parent.parent / "Local
 NOITA_DEFAULT_SAVE_NAME: str = "save00"
 NOITA_CURRENT_SAVE_PATH: Path = NOITA_DATA_FOLDER / NOITA_DEFAULT_SAVE_NAME
 
+MAX_QUICK_SAVE_COUNT: int = 5
+
 DEFAULT_PYDANTIC_CONFIG: ConfigDict = ConfigDict(arbitrary_types_allowed=True)
 
 

@@ -11,6 +11,7 @@ from pydantic import validate_call
 
 from noita.constants import DEFAULT_PYDANTIC_CONFIG
 from noita.constants import FILE_SAFE_DATETIME_FORMAT
+from noita.constants import MAX_QUICK_SAVE_COUNT
 from noita.constants import NOITA_CURRENT_SAVE_PATH
 from noita.constants import USER_NOITA_QUICK_SAVES_FOLDER
 from noita.constants import USER_NOITA_SAVES_FOLDER
@@ -20,6 +21,9 @@ def quick_save() -> None:
     """Create a new disposable Noita game save state."""
     logger.info(f"Creating a new Noita quicksave...")
     path: Path = get_new_quick_save_path()
+    quick_saves: list[Path] = get_quick_save_paths()
+    if len(quick_saves) >= MAX_QUICK_SAVE_COUNT:
+        remove_oldest_quick_save()
     save(path=path)
 
 
@@ -29,6 +33,21 @@ def get_new_quick_save_path() -> Path:
     file_name: str = f"quicksave_{quick_save_slug}"
     path: Path = USER_NOITA_QUICK_SAVES_FOLDER / file_name
     return path
+
+
+def remove_oldest_quick_save() -> None:
+    """Remove the oldest Noita quicksave folder."""
+    path: Path = find_oldest_quick_save()
+    logger.info(f"Removing oldest quick save at `{path}`.")
+    clear(path=path)
+
+
+def find_oldest_quick_save() -> Path:
+    """Returns the most oldlest Noita game save state's name."""
+    quick_save_paths: list[Path] = get_quick_save_paths()
+    if len(quick_save_paths) < 1:
+        raise FileNotFoundError("Failed to find any existing Noita quick saves.")
+    return min(quick_save_paths, key=lambda path: path.stat().st_mtime)
 
 
 @validate_call(config=DEFAULT_PYDANTIC_CONFIG)

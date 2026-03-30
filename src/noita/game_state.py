@@ -120,4 +120,6 @@ def show_saves() -> None:
 def display_saves(paths: list[Path]) -> None:
     """Display the provided list of Noita save paths."""
     for save_path in sorted(paths, key=lambda path: path.stat().st_mtime):
-        logger.info(f"\t{save_path} - {save_path.stat().st_mtime}")
+        last_access_datetime: datetime.datetime = datetime.datetime.fromtimestamp(save_path.stat().st_mtime)
+        last_access_slug: str = last_access_datetime.strftime(FILE_SAFE_DATETIME_FORMAT)
+        logger.info(f"\t{save_path} - {last_access_slug}")

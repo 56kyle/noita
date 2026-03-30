@@ -25,7 +25,7 @@ USER_NOITA_QUICK_SAVES_FOLDER.mkdir(parents=True, exist_ok=True)
 USER_NOITA_SAVES_FOLDER: Path = USER_DATA_FOLDER / "saves"
 USER_NOITA_SAVES_FOLDER.mkdir(parents=True, exist_ok=True)
 
-NOITA_DATA_FOLDER: Path = USER_CACHE_FOLDER.parent.parent.parent / "LocalLow" / "Nolla_Games_Noita"
+NOITA_DATA_FOLDER: Path = USER_CACHE_FOLDER.parent.parent.parent.parent / "LocalLow" / "Nolla_Games_Noita"
 NOITA_DEFAULT_SAVE_NAME: str = "save00"
 NOITA_CURRENT_SAVE_PATH: Path = NOITA_DATA_FOLDER / NOITA_DEFAULT_SAVE_NAME
 

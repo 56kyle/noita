@@ -1,4 +1,5 @@
 """Module containing logic for interacting with copies of a given Noita game state."""
+
 import datetime
 import shutil
 from pathlib import Path
@@ -18,31 +19,33 @@ from noita.constants import USER_NOITA_SAVES_FOLDER
 def quick_save() -> None:
     """Create a new disposable Noita game save state."""
     logger.info(f"Creating a new Noita quicksave...")
+    path: Path = get_new_quick_save_path()
+    save(path=path)
+
+
+def get_new_quick_save_path() -> Path:
+    """Returns a new Noita quicksave folder."""
     quick_save_slug: str = datetime.datetime.now().strftime(FILE_SAFE_DATETIME_FORMAT)
     file_name: str = f"quicksave_{quick_save_slug}"
     path: Path = USER_NOITA_QUICK_SAVES_FOLDER / file_name
-    save(path=path)
+    return path
 
 
 @validate_call(config=DEFAULT_PYDANTIC_CONFIG)
 def save(path: NewPath) -> None:
     """Create a new Noita game save state."""
     logger.info(f"Saving current Noita game state to `{path}`")
-    shutil.copytree(
-        src=NOITA_CURRENT_SAVE_PATH,
-        dst=path,
-        dirs_exist_ok=True
-    )
+    shutil.copytree(src=NOITA_CURRENT_SAVE_PATH, dst=path, dirs_exist_ok=True)
 
 
 def quick_load() -> None:
     """Load the latest disposable Noita game save state."""
     logger.info(f"Loading the latest Noita quicksave...")
-    path: Path = _find_most_recent_save()
+    path: Path = find_most_recent_save()
     load(path=path)
 
 
-def _find_most_recent_save() -> Path:
+def find_most_recent_save() -> Path:
     """Returns the most recent Noita game save state's name."""
     all_save_paths: list[Path] = get_all_save_paths()
     if len(all_save_paths) < 1:
@@ -56,11 +59,7 @@ def load(path: DirectoryPath) -> None:
     logger.info(f"Loading new Noita game state from `{path}`")
     if NOITA_CURRENT_SAVE_PATH.exists():
         raise FileExistsError(f"{NOITA_CURRENT_SAVE_PATH} already exists.")
-    shutil.copytree(
-        src=path,
-        dst=NOITA_CURRENT_SAVE_PATH,
-        dirs_exist_ok=False
-    )
+    shutil.copytree(src=path, dst=NOITA_CURRENT_SAVE_PATH, dirs_exist_ok=False)
 
 
 def get_all_save_paths() -> list[Path]:

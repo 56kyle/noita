@@ -8,6 +8,7 @@ from loguru import logger
 from pydantic import DirectoryPath
 from pydantic import NewPath
 from pydantic import validate_call
+from pygments.lexers import q
 
 from noita.constants import DEFAULT_PYDANTIC_CONFIG
 from noita.constants import FILE_SAFE_DATETIME_FORMAT
@@ -101,3 +102,22 @@ def clear(path: DirectoryPath) -> None:
     """Remove the current Noita game save state."""
     logger.warning(f"Clearing Noita game save state at `{path}`.")
     shutil.rmtree(path=path)
+
+
+def show_saves() -> None:
+    """Show available Noita save states."""
+    logger.info(f"Showing available Noita save states...")
+
+    logger.info(f"Quicksaves:")
+    quick_save_paths: list[Path] = get_quick_save_paths()
+    display_saves(paths=quick_save_paths)
+
+    logger.info(f"Saves:")
+    save_paths: list[Path] = get_save_paths()
+    display_saves(paths=save_paths)
+
+
+def display_saves(paths: list[Path]) -> None:
+    """Display the provided list of Noita save paths."""
+    for save_path in sorted(paths, key=lambda path: path.stat().st_mtime):
+        logger.info(f"\t{save_path} - {save_path.stat().st_mtime}")

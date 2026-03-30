@@ -14,6 +14,7 @@ from noita.game_state import get_new_quick_save_path
 from noita.game_state import load
 from noita.game_state import quick_save
 from noita.game_state import save
+from noita.game_state import show_saves
 
 
 app: typer.Typer = typer.Typer()
@@ -59,6 +60,12 @@ def noita_load(
         clear(path=NOITA_CURRENT_SAVE_PATH)
 
     load(path=path)
+
+
+@app.command(name="show")
+def noita_show() -> None:
+    """Show available Noita save states."""
+    show_saves()
 
 
 if __name__ == "__main__":

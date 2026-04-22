@@ -63,6 +63,9 @@ noita = "noita.__main__:app"
 Homepage = "https://github.com/56kyle/noita"
 Repository = "https://github.com/56kyle/noita"
 
+[tool.uv]
+exclude-newer = "7 days"
+
 [[tool.uv.index]]
 name = "testpypi"
 url = "https://test.pypi.org/simple/"
